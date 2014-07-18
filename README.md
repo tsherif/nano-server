@@ -24,11 +24,11 @@ For this usage, `simple-server.js` assumes that `node` is installed in `/usr/loc
 By default, `simple-server.js` will run on port **5000** and use the current working directory as its document root. Optionally, a port number can be passed as first argument on the command line:
 
 ```bash
-  $ simple-server.js 3000
+  $ ./simple-server.js 3000
 ```
 
 The document root can be given as second argument, if desired.
 
 ```bash
-  $ simple-server.js 5000 my_app/public_html
+  $ ./simple-server.js 5000 my_app/public_html
 ```
