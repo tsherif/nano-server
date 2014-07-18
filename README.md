@@ -19,7 +19,7 @@ If the file `simple-server.js` is made to be executable, it can be started witho
   $ ./simple-server.js
 ```
 
-For this usage, `simple-server.js` assumes that `node` is installed in `/usr/local/bin`, the **shebang** statement on the first line of the `simple-server.js` script will have to be modified to point to the location of `node`.
+For this usage, `simple-server.js` assumes that `node` is installed in `/usr/local/bin`. If this is not the case, the **shebang** statement on the first line of the `simple-server.js` script will have to be modified to point to the location of `node`.
 
 By default, `simple-server.js` will run on port **5000** and use the current working directory as its document root. Optionally, a port number can be passed as first argument on the command line:
 
