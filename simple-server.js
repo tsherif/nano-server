@@ -19,8 +19,9 @@
 
 "use strict";
 
-var http = require('http');
-var fs = require('fs');
+var http = require("http");
+var fs = require("fs");
+var version = "0.1.0";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
@@ -52,7 +53,7 @@ http.createServer(function (req, res) {
     }
   });
 }).listen(port, function() {
-  console.log("simple-server running in '" + root + "' started on port " + port + ".");
+  console.log("simple-server v" + version + " running in '" + root + "' started on port " + port + ".");
 });
 
 function sendFile(res, path, mime_type) {
