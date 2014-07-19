@@ -21,14 +21,14 @@
 
 var http = require("http");
 var fs = require("fs");
-var version = "0.1.0";
+var version = "0.2.0";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
 
 http.createServer(function (req, res) {
 
-  var path = root + "/" + (req.url.replace(/^\/+/, "") || "index.html");
+  var path = root + "/" + req.url.replace(/^\/+/, "");
   var extension = path.match(/\.[^\.]+$/);
   var mime_type;
   if (extension) {
@@ -36,31 +36,54 @@ http.createServer(function (req, res) {
     mime_type = mime_types[extension];
   }
 
-  fs.exists(path, function(exists) {
-    if (exists) {
-      sendFile(res, path, mime_type);
-    } else {
-      path += ".gz";
-      fs.exists(path, function(exists) {
-        if (exists) {
-          res.setHeader("Content-Encoding", "gzip");
-          sendFile(res, path, mime_type);        
+  fs.stat(path, function(err, stat) {
+    if (stat && stat.isDirectory()) {
+      fs.readFile(path + "/index.html", function(err, content) {
+        if (err) {
+          listDirectory(res, path);
         } else {
-          res.writeHead(404);
-          res.end("File " + req.url + " not found.");
+          sendFile(res, mime_type, content);
+        }
+      });
+    } else {
+      fs.readFile(path, function(err, content) {
+        if (err) {
+          fs.readFile(path + ".gz", function(err, content) {
+            if (err) {
+              res.writeHead(404);
+              res.end("File " + req.url + " not found.");
+            } else {
+              res.setHeader("Content-Encoding", "gzip");
+              sendFile(res, mime_type, content);
+            }
+          });
+        } else {
+          sendFile(res, mime_type, content);
         }
       });
     }
-  });
+  })
+ 
+
 }).listen(port, function() {
   console.log("simple-server v" + version + " running in '" + root + "' started on port " + port + ".");
 });
 
-function sendFile(res, path, mime_type) {
+function sendFile(res, mime_type, content) {
   if (mime_type) {
     res.setHeader("Content-Type", mime_type);
   }
-  fs.readFile(path, function(err, content) {
+  res.end(content);
+}
+
+function listDirectory(res, path) {
+  fs.readdir(path, function(err, files) {
+    var content = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin-left: 25px">';
+    content += '<h2>Listing files for ' + path.replace(/^\./, "") + '</h2>';
+    content += files.map(function(file) { 
+      return '<a href="' + path + '/' + file + '">' + file + '</a>';
+    }).join('<BR>');
+    content += '</body></html>';
     res.end(content);
   });
 }
