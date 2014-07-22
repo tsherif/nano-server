@@ -21,7 +21,7 @@
 
 var http = require("http");
 var fs = require("fs");
-var version = "0.2.8";
+var version = "0.2.9";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
@@ -84,7 +84,7 @@ function listDirectory(res, path) {
     content += files.map(function(file) { 
       return '<li><a href="' + path + '/' + file + '">' + file + '</a></li>';
     }).join('');
-    content += '</ul>'
+    content += '</ul>';
     content += '</body></html>';
     res.end(content);
   });
