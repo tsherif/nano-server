@@ -36,7 +36,7 @@ The document root can be given as second argument, if desired.
   $ nano-server 5000 my_app/public_html
 ```
 
-Since `nano-server` has no dependancies, it can be dropped directly into any project and invoked using `node` explicity: 
+Since `nano-server` has no dependancies, it can be dropped directly into any project and invoked using `node` explicitly. This can be useful if you don't have the necessary permissions to do a global install on the machine you're using: 
 
 ```bash
   $ cp nano-server ~/path/to/project/
