@@ -1,7 +1,7 @@
 {
   "name": "nano-server",
-  "description": "A lightweight node.js HTTP server for web development.",
-  "version": "0.2.6",
+  "description": "An ultra-lightweight node.js HTTP server for web development.",
+  "version": "0.2.7",
   "bin": "nano-server",
   "repository": {
     "type": "git",

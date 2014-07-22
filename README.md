@@ -1,7 +1,13 @@
 nano-server
 ================
 
-**nano-server** is a lightweight **node.js** HTTP server for web development. It exposes a local directory through HTTP, appropriately sets the MIME types for files it sends and will send gzip compressed versions of requested files if they are available.
+**nano-server** is an ultra-lightweight **node.js** HTTP server for web development. It exposes a local directory through HTTP, simplifying development of front-end apps that require functionality blocked by cross-origin protections, e.g. [AJAX](https://developer.mozilla.org/en/docs/AJAX), [Canvas Image Processing](http://www.w3schools.com/tags/canvas_getimagedata.asp), [Web Audio Analysis](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API). 
+
+`nano-server` provides some features that I didn't find in similar server packages:
+
+ * Sends **gzipped** versions of files, if they are available.
+ * Attempts to set the **Content-type** header with the appropriate MIME type.
+ * **0** dependencies. Can be dropped into any project.
 
 Usage
 ------
@@ -30,7 +36,7 @@ The document root can be given as second argument, if desired.
   $ nano-server 5000 my_app/public_html
 ```
 
-Since `nano-server` has no dependancies, it can be dropped into a project directly and invoked using `node` explicity: 
+Since `nano-server` has no dependancies, it can be dropped directly into any project and invoked using `node` explicity: 
 
 ```bash
   $ cp nano-server ~/path/to/project/
