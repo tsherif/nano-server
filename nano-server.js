@@ -21,7 +21,7 @@
 
 var http = require("http");
 var fs = require("fs");
-var version = "0.2.0";
+var version = "0.2.1";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
@@ -66,7 +66,7 @@ http.createServer(function (req, res) {
  
 
 }).listen(port, function() {
-  console.log("simple-server v" + version + " running in '" + root + "' started on port " + port + ".");
+  console.log("nano-server v" + version + " running in '" + root + "' started on port " + port + ".");
 });
 
 function sendFile(res, mime_type, content) {
