@@ -6,7 +6,7 @@ nano-server
 `nano-server` provides some features that I didn't find in similar server packages:
 
  * Sends **gzipped** versions of files, if they are available.
- * Attempts to set the **Content-type** header with the appropriate MIME type.
+ * Attempts to set the **Content-Type** header with the appropriate MIME type.
  * **0** dependencies. Can be dropped into any project.
 
 Usage

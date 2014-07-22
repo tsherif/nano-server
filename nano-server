@@ -21,7 +21,7 @@
 
 var http = require("http");
 var fs = require("fs");
-var version = "0.2.7";
+var version = "0.2.8";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
