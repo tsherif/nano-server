@@ -1,9 +1,11 @@
 {
   "name": "nano-server",
-  "version": "0.2.1",
+  "description": "A lightweight node.js HTTP server for web development.",
+  "version": "0.2.5",
+  "bin": "nano-server",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tsherif/simple-server.git"
+    "url": "https://github.com/tsherif/nano-server.git"
   },
   "author": {
     "name": "Tarek Sherif",
