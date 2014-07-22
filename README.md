@@ -18,7 +18,7 @@ Then `nano-server` can be invoked as a command line executable:
   $ nano-server
 ```
 
-By default, `nano-server.js` will run on port **5000** and use the current working directory as its document root. Optionally, a port number can be passed as first argument on the command line:
+By default, `nano-server` will run on port **5000** and use the current working directory as its document root. Optionally, a port number can be passed as first argument on the command line:
 
 ```bash
   $ nano-server 3000
