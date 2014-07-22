@@ -19,7 +19,7 @@ module.exports = function(grunt) {
         options: {
           node: true
         },
-        src: ["simple-server.js",  "Gruntfile.js"]
+        src: ["nano-server.js",  "Gruntfile.js"]
       }
     }
   });

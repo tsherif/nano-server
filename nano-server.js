@@ -1,6 +1,6 @@
-#!/usr/local/bin/node
+#!/usr/bin/env node
 /*
-* simple-server.js: a lightweight node.js HTTP server for web development.
+* nano-server.js: a lightweight node.js HTTP server for web development.
 * Copyright (c) 2014 Tarek Sherif
 * 
 * This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,7 @@ http.createServer(function (req, res) {
         }
       });
     }
-  })
+  });
  
 
 }).listen(port, function() {
