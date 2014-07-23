@@ -21,7 +21,7 @@
 
 var http = require("http");
 var fs = require("fs");
-var version = "0.2.9";
+var version = "0.3.0";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
@@ -70,6 +70,10 @@ http.createServer(function (req, res) {
 });
 
 function sendFile(res, mime_type, content) {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
   if (mime_type) {
     res.setHeader("Content-Type", mime_type);
   }
@@ -77,6 +81,10 @@ function sendFile(res, mime_type, content) {
 }
 
 function listDirectory(res, path) {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
   fs.readdir(path, function(err, files) {
     var content = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin-left: 25px">';
     content += '<h2>Listing files for ' + path.replace(/^\./, "") + '</h2>';
@@ -245,6 +253,7 @@ function getMimeTypes() {
     ".jpg":  "image/jpeg",
     ".jps":  "image/x-jps",
     ".js": "text/javascript",
+    ".json": "application/json",
     ".jut":  "image/jutvision",
     ".kar":  "audio/midi",
     ".ksh":  "application/x-ksh",
