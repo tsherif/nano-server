@@ -21,7 +21,7 @@
 
 var http = require("http");
 var fs = require("fs");
-var version = "0.3.1";
+var version = "0.3.2";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
@@ -82,7 +82,13 @@ function sendFile(res, mime_type, content) {
 
 function listDirectory(res, path) {
   var header_path = path.replace(/^\./, "");
-  var base_path = header_path.replace(/^\//, "");
+  var base_path = header_path.replace(/^\//, "").trim();
+
+  if (base_path.length > 0) {
+    base_path += "/";
+  }
+
+
 
   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.setHeader("Pragma", "no-cache");
@@ -93,7 +99,7 @@ function listDirectory(res, path) {
     content += '<h2>Listing files for ' + header_path + '</h2>';
     content += '<ul>';
     content += files.map(function(file) { 
-      return '<li><a href="/' + base_path + '/' + file + '">' + file + '</a></li>';
+      return '<li><a href="/' + base_path + file + '">' + file + '</a></li>';
     }).join('');
     content += '</ul>';
     content += '</body></html>';
