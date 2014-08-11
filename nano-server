@@ -81,16 +81,19 @@ function sendFile(res, mime_type, content) {
 }
 
 function listDirectory(res, path) {
+  var header_path = path.replace(/^\./, "");
+  var base_path = header_path.replace(/^\//, "");
+
   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
 
   fs.readdir(path, function(err, files) {
     var content = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin-left: 25px">';
-    content += '<h2>Listing files for ' + path.replace(/^\./, "") + '</h2>';
+    content += '<h2>Listing files for ' + header_path + '</h2>';
     content += '<ul>';
     content += files.map(function(file) { 
-      return '<li><a href="' + path + '/' + file + '">' + file + '</a></li>';
+      return '<li><a href="/' + base_path + '/' + file + '">' + file + '</a></li>';
     }).join('');
     content += '</ul>';
     content += '</body></html>';
