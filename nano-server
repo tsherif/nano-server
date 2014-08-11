@@ -21,12 +21,19 @@
 
 var http = require("http");
 var fs = require("fs");
+var pathlib = require("path");
 var version = "0.3.2";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
+var root_path = pathlib.resolve(root);
 
 http.createServer(function (req, res) {
+  var full_requested_path = pathlib.resolve(root, req.url.replace(/^\/+/, ""));
+  if (full_requested_path.indexOf(root_path) !== 0) {
+    res.writeHead(403);
+    return res.end("Unauthorized.")
+  }
 
   var path = root + "/" + req.url.replace(/^\/+/, "");
   var extension = path.match(/\.[^\.]+$/);
