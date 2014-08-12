@@ -21,59 +21,64 @@
 
 var http = require("http");
 var fs = require("fs");
-var pathlib = require("path");
+var path = require("path");
 var version = "0.3.2";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
-var root_path = pathlib.resolve(root);
+var root_path = path.resolve(root);
 
 http.createServer(function (req, res) {
-  var full_requested_path = pathlib.resolve(root, req.url.replace(/^\/+/, ""));
-  if (full_requested_path.indexOf(root_path) !== 0) {
+  var method = req.method;
+  var url = req.url; 
+  var request_path = path.normalize(url.replace(/^\/+/, "/").replace(/\?.*$/, ""));
+  var file_path = path.resolve(root, request_path.replace(/^\/+/, ""));
+  
+  if (file_path.indexOf(root_path) !== 0) {
     res.writeHead(403);
+    logResponse(method, url, 403, "Unauthorized");
     return res.end("Unauthorized.\n")
   }
 
-  var path = root + "/" + req.url.replace(/^\/+/, "");
-  var extension = path.match(/\.[^\.]+$/);
-  var mime_type;
-  if (extension) {
-    extension = extension[0];
-    mime_type = mime_types[extension];
-  }
+  var mime_type = mime_types[path.extname(file_path)];
 
-  fs.stat(path, function(err, stat) {
+  fs.stat(file_path, function(err, stat) {
     if (stat && stat.isDirectory()) {
-      fs.readFile(path + "/index.html", function(err, content) {
+      fs.readFile(file_path + "/index.html", function(err, content) {
         if (err) {
-          listDirectory(res, path);
+          listDirectory(res, file_path, request_path);
+          logResponse(method, url, 200, "Listing directory " + request_path, "text/html");
         } else {
           sendFile(res, mime_type, content);
+          logResponse(method, url, 200, "Sending file " + path.join(request_path, "index.html"), "text/html");
         }
       });
     } else {
-      fs.readFile(path, function(err, content) {
+      fs.readFile(file_path, function(err, content) {
         if (err) {
-          fs.readFile(path + ".gz", function(err, content) {
+          fs.readFile(file_path + ".gz", function(err, content) {
             if (err) {
               res.writeHead(404);
-              res.end("File " + req.url + " not found.");
+              res.end("File " + request_path + " not found.");
+              logResponse(method, url, 404, "File " + request_path + " not found");
             } else {
               res.setHeader("Content-Encoding", "gzip");
               sendFile(res, mime_type, content);
+              logResponse(method, url, 200, "Sending file " + request_path + ".gz", (mime_type || "unknown") + " (gzip encoded)");
             }
           });
         } else {
           sendFile(res, mime_type, content);
+          logResponse(method, url, 200, "Sending file " + request_path, mime_type);
         }
       });
     }
+
   });
  
 
 }).listen(port, function() {
-  console.log("nano-server v" + version + " running in '" + root + "' started on port " + port + ".");
+  console.log("nano-server v" + version + " running in '" + root + "' started on port " + port + ".\n");
 });
 
 function sendFile(res, mime_type, content) {
@@ -87,31 +92,34 @@ function sendFile(res, mime_type, content) {
   res.end(content);
 }
 
-function listDirectory(res, path) {
-  var header_path = path.replace(/^\./, "");
-  var base_path = header_path.replace(/^\//, "").trim();
-
-  if (base_path.length > 0) {
-    base_path += "/";
-  }
-
-
-
+function listDirectory(res, dir, request_path) {
+  res.setHeader("Content-Type", "text/html");
   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
 
-  fs.readdir(path, function(err, files) {
+  fs.readdir(dir, function(err, files) {
     var content = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin-left: 25px">';
-    content += '<h2>Listing files for ' + header_path + '</h2>';
+    content += '<h2>Listing files for ' + request_path + '</h2>';
     content += '<ul>';
     content += files.map(function(file) { 
-      return '<li><a href="/' + base_path + file + '">' + file + '</a></li>';
+      return '<li><a href="' + path.join(request_path, file) + '">' + file + '</a></li>';
     }).join('');
     content += '</ul>';
     content += '</body></html>';
     res.end(content);
   });
+}
+
+function logResponse(method, url, code, message, mime_type) {
+  console.log(method, url);
+  console.log(code + ":", message);
+
+  if (mime_type) {
+    console.log("MIME Type:", mime_type);
+  }
+
+  console.log();
 }
 
 function getMimeTypes() {
