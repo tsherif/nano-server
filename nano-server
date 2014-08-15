@@ -37,7 +37,7 @@ http.createServer(function (req, res) {
   if (file_path.indexOf(root_path) !== 0) {
     res.writeHead(403);
     logResponse(method, url, 403, "Unauthorized");
-    return res.end("Unauthorized.\n")
+    return res.end("Unauthorized.\n");
   }
 
   var mime_type = mime_types[path.extname(file_path)];
