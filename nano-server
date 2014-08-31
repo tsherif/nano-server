@@ -22,24 +22,16 @@
 var http = require("http");
 var fs = require("fs");
 var path = require("path");
-var version = "0.4.1";
+var version = "0.4.2";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
-var root_path = path.resolve(root);
 
 http.createServer(function (req, res) {
   var method = req.method;
   var url = req.url; 
   var request_path = path.normalize(url.replace(/^\/+/, "/").replace(/\?.*$/, ""));
   var file_path = path.resolve(root, request_path.replace(/^\/+/, ""));
-  
-  if (file_path.indexOf(root_path) !== 0) {
-    res.writeHead(403);
-    logResponse(method, url, 403, "Unauthorized");
-    return res.end("Unauthorized.\n");
-  }
-
   var mime_type = mime_types[path.extname(file_path)];
 
   fs.stat(file_path, function(err, stat) {
@@ -115,7 +107,7 @@ function listDirectory(res, dir, request_path) {
           sendDirListing(res, files, dirs, request_path);
         }
       });
-    })
+    });
   });
 }
 
@@ -136,13 +128,12 @@ function sendDirListing(res, files, dirs, request_path) {
 
 function logResponse(method, url, code, message, mime_type) {
   console.log(method, url);
-  console.log(code + ":", message);
 
   if (mime_type) {
-    console.log("MIME Type:", mime_type);
+    message += " (" + mime_type + ")";
   }
 
-  console.log();
+  console.log(code + ":", message + "\n");
 }
 
 function getMimeTypes() {
