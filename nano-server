@@ -30,14 +30,15 @@ var root = process.argv[3] || ".";
 http.createServer(function (req, res) {
   var method = req.method;
   var url = req.url; 
-  var request_path = path.normalize(url.replace(/^\/+/, "/").replace(/\?.*$/, ""));
-  var file_path = path.resolve(root, request_path.replace(/^\/+/, ""));
+  var request_path = url.replace(/^\/+/, "").replace(/\?.*$/, "");
+  var file_path = path.resolve(root, request_path);
   var mime_type = mime_types[path.extname(file_path)] || "application/octet-stream";
 
   fs.stat(file_path, function(err, stat) {
     if (stat && stat.isDirectory()) {
       fs.readFile(file_path + "/index.html", function(err, content) {
         if (err) {
+          request_path = (request_path + "/").replace(/\/+$/, "/");
           listDirectory(res, file_path, request_path);
           logResponse(method, url, 200, "Listing directory " + request_path, "text/html");
         } else {
@@ -96,10 +97,12 @@ function listDirectory(res, dir, request_path) {
 
     file_names.forEach(function(name) {
       fs.stat(path.join(dir, name), function(err, stat) {
-        if (stat.isDirectory()) {
-          dirs.push(name + "/");
-        } else {
-          files.push(name);
+        if (stat) {
+          if (stat.isDirectory()) {
+            dirs.push(name + "/");
+          } else {
+            files.push(name);
+          }
         }
 
         if (!--num_remaining) {
@@ -111,14 +114,17 @@ function listDirectory(res, dir, request_path) {
 }
 
 function sendDirListing(res, files, dirs, request_path) {
+  request_path = "/" + request_path;
+
   var content = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin-left: 25px">';
   content += '<h2>Listing files for ' + request_path + '</h2>';
   content += '<ul>';
+
   content += dirs.map(function(dir) { 
-    return '<li><a href="' + path.join(request_path, dir) + '">' + dir + '</a></li>';
+    return '<li><a href="' + request_path + dir + '">' + dir + '</a></li>';
   }).join('');
   content += files.map(function(file) { 
-    return '<li><a href="' + path.join(request_path, file) + '">' + file + '</a></li>';
+    return '<li><a href="' + request_path + file + '">' + file + '</a></li>';
   }).join('');
   content += '</ul>';
   content += '</body></html>';
