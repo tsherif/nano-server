@@ -1,7 +1,7 @@
 nano-server
 ================
 
-**nano-server** is an ultra-lightweight **node.js** HTTP server for web development. It exposes a local directory through HTTP, simplifying development of front-end apps that require functionality blocked by cross-origin protections, e.g. [AJAX](https://developer.mozilla.org/en/docs/AJAX), [Canvas Image Processing](http://www.w3schools.com/tags/canvas_getimagedata.asp), [Web Audio Analysis](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API). 
+**nano-server** is an ultra-lightweight **node.js** HTTP server for web development. It exposes a local directory through HTTP, simplifying development of front-end apps that require functionality blocked by cross-origin protections, e.g. [AJAX](https://developer.mozilla.org/en/docs/AJAX), [Canvas Image Processing](http://www.w3schools.com/tags/canvas_getimagedata.asp), [Web Audio Analysis](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API), [WebGL textures](https://developer.mozilla.org/en-US/docs/Web/WebGL/Cross-Domain_Textures). 
 
 `nano-server` provides some features that I didn't find in similar server packages:
 
