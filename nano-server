@@ -147,6 +147,7 @@ function getMimeTypes() {
     ".bmp":  "image/bmp",
     ".css":  "text/css",
     ".gif":  "image/gif",
+    ".svg": "image/svg+xml",
     ".htm": "text/html",
     ".html": "text/html",
     ".ico":  "image/x-icon",
