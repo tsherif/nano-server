@@ -22,7 +22,7 @@
 var http = require("http");
 var fs = require("fs");
 var path = require("path");
-var version = "0.5.3";
+var version = "0.5.4";
 var mime_types = getMimeTypes();
 var port = process.argv[2] || 5000;
 var root = process.argv[3] || ".";
@@ -30,7 +30,7 @@ var root = process.argv[3] || ".";
 http.createServer(function (req, res) {
   var method = req.method;
   var url = req.url; 
-  var request_path = url.replace(/^\/+/, "").replace(/\?.*$/, "");
+  var request_path = decodeURI(url.replace(/^\/+/, "").replace(/\?.*$/, ""));
   var file_path = path.resolve(root, request_path);
   var mime_type = mime_types[path.extname(file_path)] || "application/octet-stream";
 
